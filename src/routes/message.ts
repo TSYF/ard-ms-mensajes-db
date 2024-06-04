@@ -124,6 +124,99 @@ router.post(
     }
 )
 
+//* Update
+router.put(
+    "/:id",
+    async (req, res) => {
+        const { id } = req.params;
+
+        const message = req.body;
+        console.table(message);
+
+        if (!matches(message, messageMatcher)) {
+            const CODE = 422;
+            
+            const error: ErrorBody = {
+                private: "La forma del cuerpo no corresponde al Mensaje",
+                public: new CommonResponseBody(
+                    false,
+                    CODE,
+                    {
+                        message: "La forma del cuerpo no corresponde al Mensaje"
+                    }
+                )
+            }
+            console.table(message);
+            console.log(error.private);
+            console.error(error.errorObject)
+            res.status(CODE).send(error.public);
+            return;
+        }
+
+        console.table(message);
+
+        const updatedMessage = (await db
+            .update(messageModel)
+            .set(message)
+            .where(eq(messageModel.id, +id))
+            .returning())[0];
+
+        if (!updatedMessage) {
+            const CODE = 500;
+
+            const error: ErrorBody = {
+                private: "Actualización no retorna fila actualizada",
+                public: new CommonResponseBody(
+                    false,
+                    CODE,
+                    {
+                        message: "¡Ha ocurrido un problema inesperado!"
+                    }
+                )
+            }
+            console.log(error.private);
+            console.error(error.errorObject)
+            res.status(CODE).send(error.public);
+            return;
+        }
+
+        res.status(200).send(updatedMessage);
+    }
+)
+
+//* Delete
+router.delete(
+    "/:id",
+    async (req, res) => {
+        const { id } = req.params;
+
+        const deletedMessage = (await db
+            .delete(messageModel)
+            .where(eq(messageModel.id, +id))
+            .returning())[0];
+
+        if (!deletedMessage) {
+            const CODE = 500;
+
+            const error: ErrorBody = {
+                private: "Eliminación no retorna fila eliminada",
+                public: new CommonResponseBody(
+                    false,
+                    CODE,
+                    {
+                        message: "¡Ha ocurrido un problema inesperado!"
+                    }
+                )
+            }
+            console.log(error.private);
+            console.error(error.errorObject)
+            res.status(CODE).send(error.public);
+            return;
+        }
+
+        res.status(200).send(deletedMessage);
+    }
+)
 
 module.exports = router;
 export default router;

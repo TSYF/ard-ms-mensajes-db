@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "message" (
+CREATE TABLE IF NOT EXISTS "ar"."message" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar NOT NULL,
 	"email" varchar NOT NULL,

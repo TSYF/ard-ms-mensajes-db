@@ -1,12 +1,12 @@
 {
-  "id": "3944fd81-f737-47e8-bb2d-6dc36c6129d2",
+  "id": "ca0007b1-f705-470f-8dd8-3d86ebb02260",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
-    "public.message": {
+    "ar.message": {
       "name": "message",
-      "schema": "",
+      "schema": "ar",
       "columns": {
         "id": {
           "name": "id",
