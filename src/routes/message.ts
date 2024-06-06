@@ -1,8 +1,7 @@
 import { ErrorBody } from '@/types/ErrorBody';
 import { CommonResponseBody } from '@/types/CommonResponseBody';
 import express from 'express';
-import { matches } from '@/utils';
-import { Message, messageMatcher } from '../types/Message';
+import { Message } from '../types/Message';
 import { db } from '@/db';
 import { messageModel } from '@/db/schemas';
 import { eq, inArray } from 'drizzle-orm';
@@ -76,30 +75,7 @@ router.post(
         const message = req.body;
         console.table(message);
 
-        if (!matches(message, messageMatcher)) {
-            const CODE = 422;
-            
-            const error: ErrorBody = {
-                private: "La forma del cuerpo no corresponde al Mensaje",
-                public: new CommonResponseBody(
-                    false,
-                    CODE,
-                    {
-                        message: "La forma del cuerpo no corresponde al Mensaje"
-                    }
-                )
-            }
-            console.table(message);
-            console.log(error.private);
-            console.error(error.errorObject)
-            res.status(CODE).send(error.public);
-            return;
-        }
-
-        console.table(message);
-
         const insertedMessage = (await db.insert(messageModel).values(message).returning())[0];
-
 
         if (!insertedMessage) {
             const CODE = 500;
@@ -131,28 +107,6 @@ router.put(
         const { id } = req.params;
 
         const message = req.body;
-        console.table(message);
-
-        if (!matches(message, messageMatcher)) {
-            const CODE = 422;
-            
-            const error: ErrorBody = {
-                private: "La forma del cuerpo no corresponde al Mensaje",
-                public: new CommonResponseBody(
-                    false,
-                    CODE,
-                    {
-                        message: "La forma del cuerpo no corresponde al Mensaje"
-                    }
-                )
-            }
-            console.table(message);
-            console.log(error.private);
-            console.error(error.errorObject)
-            res.status(CODE).send(error.public);
-            return;
-        }
-
         console.table(message);
 
         const updatedMessage = (await db
